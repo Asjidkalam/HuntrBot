@@ -25,6 +25,10 @@ def getBounty(status):
             resp.append(bounty)       
     return resp
 
+@app.route("/")
+def home():
+    return "<h1>HuntrBot</h1>"
+
 @app.route('/bot', methods=['POST'])
 def bot():
     incoming_msg = request.values.get('Body', '').lower()

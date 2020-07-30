@@ -29,7 +29,7 @@ def getBounty(status):
                 resp.append(bounty)
         elif(status == "python"):
             getLanguages(obj, "Python")
-        elif(status == "js"):
+        elif(status == "js" or status == "javascript"):
             getLanguages(obj, "JavaScript")
         elif(status == "ruby"):
             getLanguages(obj, "Ruby")
@@ -55,8 +55,11 @@ def bot():
     if incoming_msg in langs:
         # return all the bounties in the specific language
         new_bounties = getBounty(incoming_msg)
-        for i in range(len(new_bounties)):
-            msg.body(new_bounties[i])
+        if(len(new_bounties) == 0):
+            msg.body("No bounties in the requested language.")
+        else:
+            for i in range(len(new_bounties)):
+                msg.body(new_bounties[i])
         responded = True
 
     if 'new' in incoming_msg:

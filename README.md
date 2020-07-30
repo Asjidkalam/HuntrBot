@@ -12,10 +12,12 @@ You can either use the app hosted on Heroku(https://huntr-bot.herokuapp.com/), o
 
 ### Usage:
 
-Currently it's configured for only two functions:
 * **all** - returns all the bugs/vulnerable packages currently active.
 * **new** - returns only the new submission made in that current day.
-
+* **python** - returns all bounties in Python.
+* **js** - returns all bounties in JavaScript.
+* **ruby** - returns all bounties in Ruby.
+* **php** - returns all bounties in PHP.
 
 ### Setup:
 

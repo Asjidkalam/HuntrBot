@@ -6,23 +6,61 @@ from twilio.twiml.messaging_response import MessagingResponse
 
 app = Flask(__name__)
 
-def getBounty(status):
-    dateToday = str(datetime.today().strftime('%Y-%m-%d'))
-    resp = []
+def getdiff(json1,json2):
+    diff = []
+    packagename1 = []
+    for j in range(0,len(json1)):
+        packagename1.append(json1[j]['PackageName'])
+    for i in range(len(json2)):
+        if json2[i]['PackageName'] not in packagename1:
+            diff.append(str(json2[i]['PackageName']+' : '+json2[i]['CodebasePrimaryLanguage']+' : '+json2[i]['VulnerabilityDescription']))
+    return diff
 
-    response = requests.get('https://files.huntr.dev/index.json')
-    response.raise_for_status()
-    jsonResponse = response.json()
-    for bounties in range(len(jsonResponse)):
-        obj = jsonResponse[bounties]
-        if(status == "new"):
-            date = str(obj['DisclosureDate'])
-            if(date == dateToday):
-                bounty = str(obj['PackageName'] + " : " + obj['CodebasePrimaryLanguage'])
-                resp.append(bounty)
+def getBounty(status):
+    resp = []
+    indexjson = requests.get('https://files.huntr.dev/index.json')
+    indexjson.raise_for_status()
+    index = indexjson.json()
+    with open('huntr.json','r') as huntrjson:
+        huntr = json.load(huntrjson)
+    huntrjson.close()
+    if(status == 'new'):
+        diff = getdiff(huntr,index)
+        if(len(diff) != 0):
+            resp = diff
         else:
-            bounty = str(obj['PackageName'] + " : " + obj['CodebasePrimaryLanguage'])
-            resp.append(bounty)       
+            resp = resp
+    else:
+        for bounties in range(len(index)):
+            obj = index[bounties]
+            if(status == 'all'):
+                bont = str(obj['PackageName']+' : '+obj['CodebasePrimaryLanguage']+' : '+obj['VulnerabilityDescription'])
+                resp.append(bont)
+            elif(status == 'Python'):
+                if(obj['CodebasePrimaryLanguage'] == status):
+                    bont = str(obj['PackageName']+' : '+obj['CodebasePrimaryLanguage']+' : '+obj['VulnerabilityDescription'])
+                    resp.append(bont)
+            elif(status == 'JavaScript'):
+                if(obj['CodebasePrimaryLanguage'] == status):
+                    bont = str(obj['PackageName']+' : '+obj['CodebasePrimaryLanguage']+' : '+obj['VulnerabilityDescription'])
+                    resp.append(bont)
+            elif(status == 'Java'):
+                if(obj['CodebasePrimaryLanguage'] == status):
+                    bont = str(obj['PackageName']+' : '+obj['CodebasePrimaryLanguage']+' : '+obj['VulnerabilityDescription'])
+                    resp.append(bont)
+            elif(status == 'Ruby'):
+                if(obj['CodebasePrimaryLanguage'] == status):
+                    bont = str(obj['PackageName']+' : '+obj['CodebasePrimaryLanguage']+' : '+obj['VulnerabilityDescription'])
+                    resp.append(bont)
+            elif(status == 'PHP'):
+                if(obj['CodebasePrimaryLanguage'] == status):
+                    bont = str(obj['PackageName']+' : '+obj['CodebasePrimaryLanguage']+' : '+obj['VulnerabilityDescription'])
+                    resp.append(bont)
+            else:
+                resp = resp
+    with open('huntr.json','w') as huntrwjson:
+        json.dump(index, huntrwjson)
+    huntrwjson.close()     
     return resp
 
 @app.route("/")
@@ -47,9 +85,62 @@ def bot():
     if 'all' in incoming_msg:
         # return all the bounties
         new_bounties = getBounty('all')
-        for i in range(len(new_bounties)):
-            msg.body(new_bounties[i])
-            msg.body("\n")
+        if(len(new_bounties) == 0):
+            for i in range(len(new_bounties)):
+                msg.body(new_bounties[i])
+                msg.body("\n")
+        else:
+            msg.body("No bounties available")
+        responded = True
+    if 'python' in incoming_msg:
+        # return all the bounties with codebase python
+        new_bounties = getBounty('Python')
+        if(len(new_bounties) == 0):
+            for i in range(len(new_bounties)):
+                msg.body(new_bounties[i])
+                msg.body("\n")
+        else:
+            msg.body("No bounties available in this language.")
+        responded = True
+    if 'php' in incoming_msg:
+        # return all the bounties with codebase php
+        new_bounties = getBounty('PHP')
+        if(len(new_bounties) == 0):
+            for i in range(len(new_bounties)):
+                msg.body(new_bounties[i])
+                msg.body("\n")
+        else:
+            msg.body("No bounties available in this language.")
+        responded = True
+    if 'javascript' in incoming_msg:
+        # return all the bounties with codebase javascript
+        new_bounties = getBounty('JavaScript')
+        if(len(new_bounties) == 0):
+            for i in range(len(new_bounties)):
+                msg.body(new_bounties[i])
+                msg.body("\n")
+        else:
+            msg.body("No bounties available in this language.")
+        responded = True
+    if 'java' in incoming_msg:
+        # return all the bounties with codebase javascript
+        new_bounties = getBounty('Java')
+        if(len(new_bounties) == 0):
+            for i in range(len(new_bounties)):
+                msg.body(new_bounties[i])
+                msg.body("\n")
+        else:
+            msg.body("No bounties available in this language.")
+        responded = True
+    if 'ruby' in incoming_msg:
+        # return all the bounties with codebase javascript
+        new_bounties = getBounty('Ruby')
+        if(len(new_bounties) == 0):
+            for i in range(len(new_bounties)):
+                msg.body(new_bounties[i])
+                msg.body("\n")
+        else:
+            msg.body("No bounties available in this language.")
         responded = True
 
     if not responded:

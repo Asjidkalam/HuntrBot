@@ -21,7 +21,7 @@ def getBounty(status):
     indexjson = requests.get('https://files.huntr.dev/index.json')
     indexjson.raise_for_status()
     index = indexjson.json()
-    with open('huntr.json','r') as huntrjson:
+    with open('../huntr.json','r') as huntrjson:
         huntr = json.load(huntrjson)
     huntrjson.close()
     if(status == 'new'):

@@ -58,7 +58,7 @@ def getBounty(status):
                     resp.append(bont)
             else:
                 resp = resp
-    with open('huntr.json','w') as huntrwjson:
+    with open('../huntr.json','w') as huntrwjson:
         json.dump(index, huntrwjson)
     huntrwjson.close()     
     return resp
